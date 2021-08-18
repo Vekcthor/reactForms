@@ -1,57 +1,24 @@
-import React, { useState } from "react";
-import { TextField, Button, Switch, FormControlLabel } from '@material-ui/core';
+import React from "react";
+import { useState } from "react";
+import DadosEntrega from "./DadosEntrega";
 
-function FormularioCadastro({onSubmit,validarCPF}) {
-    const [nome, setNome] = useState("");
-    const [sobrenome, setSobrenome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [promo, setPromo] = useState(true);
-    const [novidades, setNovidades] = useState(true);
-    const [erros, setErros] = useState({cpf:{valido:true, texto:""}});
+import DadosPessoais from "./DadosPessoais";
+import DadosUsuario from "./DadosUsuario";
 
-    return (
-        <form onSubmit={(event) => { event.preventDefault(); onSubmit({nome,sobrenome,cpf,promo,novidades}); }} >
-            <TextField value={nome} onChange={(event)=> {setNome(event.target.value); } } id="nome" label="Nome" margin="normal" variant="outlined" fullWidth />
+function FormularioCadastro({ aoEnviar, validarCPF }) {
+    const [etapaAtual, setEtapaAtual] = useState(0);
 
-            <TextField value={sobrenome} onChange={(event)=> {setSobrenome(event.target.value); } } id="sobrenome" label="Sobrenome" margin="normal" variant="outlined" fullWidth />
+    const formularios = [
+        <DadosUsuario aoEnviar={proximo} />,
+        <DadosPessoais aoEnviar={proximo} validarCPF={validarCPF} />,
+        <DadosEntrega aoEnviar={aoEnviar} />
+    ];
 
-            <TextField 
-                value={cpf} 
-                onChange={(event)=> {setCpf(event.target.value); } } 
-                error = {!erros.cpf.valido}
-                helperText = {erros.cpf.texto}
-                onBlur={(event)=>{
-                    const ehValido = validarCPF(cpf)
-                    setErros({cpf:ehValido})}}
-                id="cpf" label="CPF" variant="outlined" margin="normal" fullWidth
-                type="number" 
-            />
-            
-            <FormControlLabel
-                control={
-                    <Switch
-                        checked={promo}
-                        color="primary"
-                        name="checkedB"
-                        inputProps={{ 'aria-label': 'Promocoes' }}
-                        onChange={(event)=> {setPromo(event.target.checked); } }
-                    />}
-                label="Promoções" />
-            
-            <FormControlLabel
-                control={
-                    <Switch
-                        checked={novidades}
-                        color="primary"
-                        name="checked"
-                        inputProps={{ 'aria-label': 'Novidades' }}
-                        onChange={(event)=> {setNovidades(event.target.checked); } }
-                    />
-                }
-                label="Novidades" />
-
-            <Button variant="contained" color="primary" type="submit" >Cadastrar</Button>
-        </form>)
+    function proximo(){
+        setEtapaAtual(etapaAtual+1);
+    }
+   
+    return <>{formularios[etapaAtual]}</>;
 }
 
 export default FormularioCadastro;

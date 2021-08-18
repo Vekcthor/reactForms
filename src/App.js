@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <Container component="article" maxWidth="sm">
         <Typography variant="h3" aling="center" component="h1">Formulario de Cadastro</Typography>
-        <FormularioCadastro onSubmit={submitForm} validarCPF={validarCPF} />
+        <FormularioCadastro aoEnviar={submitForm} validarCPF={validarCPF} />
       </Container>
     );
   }
